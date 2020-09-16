@@ -3,8 +3,7 @@ import java.util.List;
 
 abstract class ProbabilityCalculator {
 
-
-    public static void calculateProbability(String homeTeam, String awayTeam) {
+    public static List<Double> getTeamsPredictions(String homeTeam, String awayTeam, boolean isHome) {
 
         Team home = new Team(homeTeam);
         Team away = new Team(awayTeam);
@@ -21,6 +20,21 @@ abstract class ProbabilityCalculator {
         for (int i = 0; i <= 5; i++) {
             awayTeamPredictions.add(Poisson.getPoissonPrediction(i, awayTeamPrediction));
         }
+        if (isHome == true) {
+            return homeTeamPredictions;
+        }
+        if (isHome == false) {
+            return awayTeamPredictions;
+        }
+        return null;
+
+    }
+
+
+    public static void calculateProbability(String homeTeam, String awayTeam) {
+
+        List<Double> homeTeamPredictions = ProbabilityCalculator.getTeamsPredictions(homeTeam, awayTeam, true);
+        List<Double> awayTeamPredictions = ProbabilityCalculator.getTeamsPredictions(homeTeam, awayTeam, false);
 
         double cacher = 0;
         int homeTeamExpectedScore = 0;
@@ -31,7 +45,6 @@ abstract class ProbabilityCalculator {
         if (i <= 5) {
             for (int j = 0; j <= 5; j++) {
                 cacher = CSVReader.roundThreePlaces(homeTeamPredictions.get(i) * awayTeamPredictions.get(j));
-                System.out.println(cacher + " " + highestProbableScore);
                 if (cacher >= highestProbableScore) {
                     highestProbableScore = cacher;
                     homeTeamExpectedScore = i;
@@ -49,7 +62,7 @@ abstract class ProbabilityCalculator {
 
         }
 
-        System.out.println(home.getTeamName() + " vs " + away.getTeamName() + " - expected score is " + homeTeamExpectedScore + " : " + awayTeamExpectedScore);
+        System.out.println(homeTeam + " vs " + awayTeam + " - expected score is " + homeTeamExpectedScore + " : " + awayTeamExpectedScore);
     }
 
 

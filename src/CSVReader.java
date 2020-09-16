@@ -15,10 +15,9 @@ abstract class CSVReader {
 
     }
 
-    public static List<List<String>> readTeamsFromCSV() {
+    public static List<List<String>> readTeamsFromCSV( String csvFile) {
 
         List<List<String>> seasonData = new ArrayList<>();
-        String csvFile = "D1.csv";
 
         String csvSplitBy = ",";
         Scanner scanner = new Scanner(csvFile);
@@ -37,7 +36,7 @@ abstract class CSVReader {
     }
 
     public static List<List<String>> getSeasonData() {
-        List<List<String>> seasonData = readTeamsFromCSV();
+        List<List<String>> seasonData = readTeamsFromCSV("D1.csv");
 
         return seasonData;
 
